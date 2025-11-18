@@ -17,26 +17,17 @@
             "password": "vscode",
             "webPort": "6080",
             "vncPort": "5901"
-        },
-		"ghcr.io/akhildevelops/devcontainer-features/android-cli:latest": {}
+        }
 	},
 	 "hostRequirements": {
         "cpus": 4,
         "memory": "16gb",
         "storage": "32gb"
       },
-
-	// Use 'postCreateCommand' to run commands after the container is created.
-	"postCreateCommand": "java -version",
-
-	// Configure tool-specific properties.
-	"customizations": {
-		"vscode": {
-			"extensions": [
-				"vscjava.vscode-java-pack"
-			]
-		}
-	}
+	"extensions": [
+        "vscjava.vscode-java-pack"
+        // ... other extensions
+      ]
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
