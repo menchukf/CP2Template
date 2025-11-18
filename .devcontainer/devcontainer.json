@@ -4,18 +4,27 @@
 	"name": "Java",
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/java:1-21-bullseye",
-
+ 	"build": {
+        "dockerfile": "Dockerfile"
+    },
 	"features": {
 		"ghcr.io/devcontainers/features/java:1": {
 			"version": "21",
 			"installMaven": "true",
 			"installGradle": "false"
 		},
+		 "ghcr.io/devcontainers/features/desktop-lite:1": {
+            "password": "vscode",
+            "webPort": "6080",
+            "vncPort": "5901"
+        },
 		"ghcr.io/akhildevelops/devcontainer-features/android-cli:latest": {}
 	},
-
-	// Use 'forwardPorts' to make a list of ports inside the container available locally.
-	// "forwardPorts": [],
+	 "hostRequirements": {
+        "cpus": 4,
+        "memory": "16gb",
+        "storage": "32gb"
+      },
 
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "java -version",
