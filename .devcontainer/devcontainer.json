@@ -9,7 +9,7 @@
     },
 	"features": {
 		"ghcr.io/devcontainers/features/java:1": {
-			"version": "21",
+			"version": "17",
 			"installMaven": "true",
 			"installGradle": "false"
 		},
@@ -27,7 +27,12 @@
 	"extensions": [
         "vscjava.vscode-java-pack"
         // ... other extensions
-      ]
+      ],
+	"settings": {
+    "github.copilot.inlineSuggest.enable": false,
+    "github.copilot.enable": false,
+    "chat.disableAIFeatures": true
+  }
 
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
 	// "remoteUser": "root"
