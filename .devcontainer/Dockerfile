@@ -1,5 +1,5 @@
 # Start from the universal image
-FROM mcr.microsoft.com/devcontainers/universal:2
+FROM openjdk:21-jdk-slim
 
 # Install openbox
 RUN sleep 100; apt-get update && export DEBIAN_FRONTEND=noninteractive \
