@@ -1,5 +1,5 @@
 # Start from the universal image
-FROM openjdk:21-jdk-slim
+FROM FROM mcr.microsoft.com/devcontainers/java:1-21-bullseye
 
 # Install openbox
 RUN sleep 100; apt-get update && export DEBIAN_FRONTEND=noninteractive \
