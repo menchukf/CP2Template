@@ -17,9 +17,10 @@ public class Player{
 	private int actionDuration = 0;//duration remaining of an action in frame
 	private int CD = 0;//duration remaing of cool down to excecute anouther action, in frames
 	private int spriteCount = 0;//the index of the current frame of an animation, determine which image get paint.
-	private int spriteMax = 1;//the amount of frame in a set action, used to loop through though a set of image, depends on player status
-	private int spirteFrameCount = 0;//the frame past since last spirt update
-	private int spirtePeriod = 1;//how long, in frame(depends on the status) player update its image
+	private int spriteMax = 1;//the amount of frames in a set action(idle only have one for exmaple), used to loop through though a set of image, depends on player status
+	private int spriteFrameCount = 0;//the frame past since last spirt update
+	private long spritePeriod = 1;//how long, in frame(depends on the status) player update its image
+	private long timeLastDraw=0;
 	final int g = 1;
     public enum Status{
         IDLE, JUMPING, PUNCHING, KICKING, BLOCKING, RUNNING_LEFT, RUNNING_RIGHT, STUNNED, DOWN, CROUCHING;
@@ -32,6 +33,8 @@ public class Player{
     public int hp = 100;
     public Status status = Status.IDLE;
     public Player(int x, int y, KeyHandler k, int ID){
+		//ArrayList currentAnimationSet = new ArrayList();
+		//ArrayList idle = 
     	try {
 			String path = "/workspaces/HoodFighterTesting/src/main/java/com/example/player/";
         	idle_right = ImageIO.read(new File(path+"idle.png"));
@@ -59,21 +62,35 @@ public class Player{
         xPos = x;
         yPos = y;
         hitbox = new Hitbox(x, y, getCurrentSprite().getWidth(), getCurrentSprite().getHeight());                                                
-    }
+		timeLastDraw = System.currentTimeMillis();
+	}
     
     public BufferedImage getCurrentSprite() {
     	BufferedImage imageReturned = null;
     	if(status == Status.IDLE) {
+			spriteMax = 1;//only one frame in IDEL state
+			spritePeriod = 500;// we never needs to switch with the other frame since there is only 1
     		//System.out.println("IDLE");
     		if(spriteCount == 0) {
     			imageReturned = idle_right;
     		}
     	}
     	if(status == Status.PUNCHING) {
-    		//System.out.println("PUNCH");
+			spriteMax = 3;//there frame in IDEL state
+			spritePeriod = 10;//update every 10 frame
     		if(spriteCount == 0) {
-    			imageReturned = jab2;
+    			imageReturned = jab1;
+				System.out.println("PUNCH1");
     		}
+			if(spriteCount == 1){
+				imageReturned = jab2;
+				System.out.println("PUNCH2");
+
+			}
+			if(spriteCount == 3){
+				imageReturned = jab1;
+				System.out.println("PUNCH3");
+			}
     	}
     	if(status == Status.CROUCHING) {
     		//System.out.println("crouch");
@@ -84,14 +101,19 @@ public class Player{
     	if(status == Status.JUMPING) {
     		//System.out.println("JUMP");
     		if(spriteCount == 0) {
-    			System.out.println("JUMPING");
     			imageReturned = jump3;
     		}
     	}
 		if(status == Status.RUNNING_LEFT){
+			System.out.println("LEFT");
 			if(spriteCount == 0) {
-    			System.out.println("JUMPING");
-    			imageReturned = jump3;
+    			imageReturned = left1;
+    		}
+		}
+		if(status == Status.RUNNING_RIGHT){
+			System.out.println("RIGHT");
+			if(spriteCount == 0) {
+    			imageReturned = right1;
     		}
 		}
     	return imageReturned;
@@ -106,8 +128,9 @@ public class Player{
 		}
 		hitbox.height = getCurrentSprite().getHeight()-40;
 	}
-    public void updateSprite() {
-    	if(spirteFrameCount == spirtePeriod-1) {//updating frame reached
+    public void updateSprite() {//called every frame
+
+    	if(System.currentTimeMillis()-timeLastDraw > spritePeriod) {//updating frame reached
     		//code below update a frame
 	    	for (int i = 0; i < spriteMax; i++) {
 	    		spriteCount++;
@@ -116,11 +139,10 @@ public class Player{
 	    		}
 
 	    	}
-	    	spirteFrameCount = 0;//reset Counter
+			System.out.println("tried to draw");
+	    	timeLastDraw = System.currentTimeMillis();//reset Counter
     	}
-    	else {
-    		spirteFrameCount++;//push frame counter
-    	}
+    
     }
   
     public void update() {
