@@ -9,10 +9,14 @@ import javax.imageio.ImageIO;
 
 import com.example.Player.Status;
 public class PlayerSprite {
-    private ArrayList<ArrayList <BufferedImage>> imageSets = new ArrayList<>(8);
+    private boolean forward = true;//used for travesal
+    private ArrayList<ArrayList <BufferedImage>> imageSets = new ArrayList<>(5);
     public int imageSetIndex = 0;//the set of images depending on player's status
     private int currentImageIndex = 0;//the index of the current sprite within a set
     public PlayerSprite(int id){
+        for (int i = 0; i< 6; i++){
+            imageSets.add(new ArrayList<>(1));
+        }
         if(id == 1){
             try {
                 String path = "/workspaces/HoodFighterTesting/src/main/java/com/example/player/";
@@ -36,14 +40,43 @@ public class PlayerSprite {
                 System.err.println("image misteriously vanished");
             }
         }
+        else if (id == 2){
+
+        }
+        System.out.println(imageSets.get(2).size());
     }
     //precondition: A sprite updating frame reached
     //postcondition: update the current image to a new frame according to player's status
     public void update(){
-        if(currentImageIndex < imageSets.get(imageSetIndex).size())//if currentImage index in bound
-            currentImageIndex++;
-        else
-            currentImageIndex = 0;
+        System.out.println(currentImageIndex);
+        if(imageSetIndex == 1){//we are jumping
+            System.out.println("We are jumping");
+            //the travelsel below allow us to access image in 1-2-3-2-1 instead of the conventional 123-123
+            if(forward){
+                if(currentImageIndex == 2){
+                    currentImageIndex = 1;
+                    forward = false;
+                }
+                else{
+                    System.out.println("here");
+                    currentImageIndex++;
+                }
+            }
+            else{
+                if(currentImageIndex == 0){
+                    currentImageIndex = 1;
+                    forward = true;
+                }
+                else
+                    currentImageIndex--;
+            }
+        }
+        else{
+            if(currentImageIndex < imageSets.get(imageSetIndex).size()-1)//if currentImage index will be in bound
+                currentImageIndex++;
+            else
+                currentImageIndex = 0;
+        }
     }
 
     //precondition: player's status changed
@@ -71,9 +104,9 @@ public class PlayerSprite {
         if(currentImageIndex >= imageSets.get(imageSetIndex).size()){
             //currentImageIndex out of bound(shouldn't happen)
             try {//just give them the reverse idle image
+                System.out.println("currentImageIndex:" + currentImageIndex + ", is out of bound, something went wrong");
                 return ImageIO.read(new File("/workspaces/HoodFighterTesting/src/main/java/com/example/player/reverseIdle"));
             } catch (IOException e) {
-                // TODO Auto-generated catch block
                 e.printStackTrace();
             }
 

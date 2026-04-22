@@ -30,7 +30,7 @@ public class GameGraphic extends JPanel implements Runnable{
             
             game.update();
             repaint();
-            long sleepTime = (long) (nextDrawTime - System.nanoTime()/1000000.0);
+            long sleepTime = (long) (nextDrawTime - System.nanoTime()/1000000.0);//this is negative some time for some reason
             try{
                 Thread.sleep(sleepTime);
             }

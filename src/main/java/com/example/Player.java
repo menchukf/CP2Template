@@ -18,7 +18,7 @@ public class Player{
 	private int actionDuration = 0;//duration remaining of an action in frame
 	private int CD = 0;//duration remaing of cool down to excecute anouther action, in frames
 	private long timeLastDraw = System.currentTimeMillis();//time since last sprite was drawn, in miliseconds
-	private int drawingInterval = 1000;//interval to update sprite, in miliseconds
+	private int drawingInterval = 500;//interval to update sprite, in miliseconds
 	final int g = 1;//acceleration due to gravity
     public enum Status{
         IDLE/* code 0 */, JUMPING/* code 1 */, PUNCHING/* code 2 */, CROUCHING/* code 3 */,
@@ -78,6 +78,7 @@ public class Player{
 	    }
 	    if(status == Status.IDLE && keyH.jumpPressed) {//jump
 	    	sprite.yoMyStatusChangedTo(status = Status.JUMPING);
+			drawingInterval = 100;
 			yVelocity = 15;
 		}
 	    if(yPos == 0 && yVelocity < 0){//landing
@@ -106,6 +107,7 @@ public class Player{
 	    }
 		//update sprite:
 		if(System.currentTimeMillis()-timeLastDraw >= drawingInterval){
+			timeLastDraw = System.currentTimeMillis();
 			sprite.update();
 		}
 		updateHitboxes();
