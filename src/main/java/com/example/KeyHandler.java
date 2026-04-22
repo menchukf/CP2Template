@@ -2,12 +2,12 @@ package com.example;
 import java.awt.event.KeyListener;
 import java.awt.event.KeyEvent;
 public class KeyHandler implements KeyListener{
-    public boolean jumpPressed, leftPressed, rightPressed, jabPressed, shieldPressed;
+    public boolean jumpPressed, leftPressed, rightPressed, jabPressed, shieldPressed, crouchPressed;
     public KeyHandler(){
 
     }
     public void keyTyped(KeyEvent e){
-
+        
     }
     public void keyPressed(KeyEvent e){
         int code = e.getKeyCode();
@@ -20,11 +20,12 @@ public class KeyHandler implements KeyListener{
         if(code == KeyEvent.VK_D){
             rightPressed = true;
         }
-        if(code == KeyEvent.VK_SHIFT){
-            jumpPressed = true;
-        }
+       
         if(code == KeyEvent.VK_S){
             jabPressed = true;
+        }
+        if(code == KeyEvent.VK_X) {
+        	crouchPressed = true;
         }
     }
     public void keyReleased(KeyEvent e){
@@ -38,11 +39,13 @@ public class KeyHandler implements KeyListener{
         if(code == KeyEvent.VK_D){
             rightPressed = false;
         }
-        if(code == KeyEvent.VK_SHIFT){
-            jumpPressed = false;
-        }
         if(code == KeyEvent.VK_S){
             jabPressed = false;
         }
+        if(code == KeyEvent.VK_X) {
+        	crouchPressed = false;
+        }
     }
 }
+
+
