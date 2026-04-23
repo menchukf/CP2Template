@@ -7,6 +7,7 @@ public class Hitbox {
 	public int height = 0;
 	public int priority = 0;
 	public boolean visible = true;
+	public boolean vanished = false;
 	public Hitbox(int x, int y, int w, int h) {
 		this.x = x;
 		this.y = y;
@@ -16,15 +17,20 @@ public class Hitbox {
 	//precondition: h != null
 	//postcondition: return if this hitbox colide with the input hit box
 	public boolean checkCollision(Hitbox h) {
-		if(x + width >= h.x || y + height >= h.y) {
-			return true;
-		}
+		if(!vanished)
+			if(x + width >= h.x || y + height >= h.y) {
+				return true;
+			}
 		return false;
 	}
 	public void updatePos(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
+    public void vanish() {
+        vanished = true;
+		visible = false;
+    }
 }
 
 

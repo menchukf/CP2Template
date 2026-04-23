@@ -49,5 +49,6 @@ public class GameGraphic extends JPanel implements Runnable{
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
         game.player1().paintComponent(g);
+        game.player2().paintComponent(g);
     }
 }
