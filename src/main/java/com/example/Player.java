@@ -6,19 +6,20 @@ import java.awt.event.KeyListener;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 
-public class Player{
+public class Player implements Serializable{
 	public int xPos;
     public int yPos;
     public int yVelocity = 0;
     public int xVelocity = 0;
     public int hp = 100;
 	public int flow = 1000;
-	private Hitbox hitbox = new Hitbox(0,0,0,0);
-	private Hitbox attackingHitbox = new Hitbox(xPos,yPos,0,0);
+	public Hitbox hitbox = new Hitbox(0,0,0,0);
+	public Hitbox attackingHitbox = new Hitbox(xPos,yPos,0,0);
 	private int ID = 0;
 	private KeyHandler keyH;
 	private ArrayList<ArrayList <BufferedImage>> imageSets = new ArrayList<>(8);
@@ -26,7 +27,7 @@ public class Player{
 	private int drawInterval = 5;//interval to update sprite, in frames
 	private int drawIndex = 0;//used as a timer, +1 every frame, player update, when DrawIndex = DrawInterval-1
 	final int g = 1;//acceleration due to gravity
-    public enum Status{
+	public boolean hasHit = false;    public enum Status{
         IDLE/* code 0 */, JUMPING/* code 1 */, PUNCHING/* code 2 */, CROUCHING/* code 3 */,
 		RUNNING_LEFT/* code 4 */, RUNNING_RIGHT/* code 5 */, BLOCKING/* code 6 */,  
 		STUNNED/* code 7 */, DOWN/* code 8 */;
@@ -69,6 +70,8 @@ public class Player{
 		}
 		
 	}
+    
+    
     public void update() {
 		if(actionDuration != 0){
 			actionDuration--;
@@ -77,6 +80,7 @@ public class Player{
 			if(status == Status.PUNCHING){
 				sprite.yoMyStatusChangedTo(status = Status.IDLE);
 				attackingHitbox.vanish();
+				hasHit = false;
 			}
 		}
 		if(keyH == null) {//no key pressed, no action
@@ -108,6 +112,8 @@ public class Player{
 				if(status != Status.JUMPING && status == Status.IDLE)
 					sprite.yoMyStatusChangedTo(status = Status.RUNNING_RIGHT);
 			}
+		}
+		if (flow >= 200){
 			xPos += xVelocity;
 			if(status == Status.IDLE && keyH.jumpPressed) {//jump
 				sprite.yoMyStatusChangedTo(status = Status.JUMPING);
@@ -115,22 +121,24 @@ public class Player{
 				drawIndex = 0;
 				yVelocity = 15;
 			}
-			if(yPos == 0 && yVelocity < 0){//landing
-				sprite.yoMyStatusChangedTo(status = Status.IDLE);
-				yVelocity = 0;
-			}
-			if(status == Status.JUMPING){//in air
-				yPos += yVelocity;
-				yVelocity = yVelocity - g;
-			}
-			//attack
-			if(status != Status.JUMPING) {
+		}
+		if(yPos == 0 && yVelocity < 0){//landing
+			sprite.yoMyStatusChangedTo(status = Status.IDLE);
+			yVelocity = 0;
+		}
+		if(status == Status.JUMPING){//in air;
+			yVelocity = yVelocity - g;
+		}
+		//attack
+		if(flow >= 300){
+			if(status != Status.JUMPING && status != Status.PUNCHING) {
 				if(keyH.jabPressed){
 					sprite.yoMyStatusChangedTo(status = Status.PUNCHING);
 					drawInterval = 5;
 					drawIndex = 0;
 					actionDuration = 15;
 					flow -= 300;
+					hasHit = false;
 				}
 			}
 		}
@@ -141,11 +149,20 @@ public class Player{
         if(!keyH.crouchPressed && status == Status.CROUCHING){
 			sprite.yoMyStatusChangedTo(status = Status.IDLE);
 	    }
-		if(status == Status.IDLE){
-			flow += 10;
-		}
-		if(status == Status.BLOCKING || status == Status.CROUCHING){
-			flow += 5;
+		if(flow <= 990){
+			if(status == Status.IDLE){
+				if(flow > 990)
+					flow = 1000;
+				else
+					flow += 10;
+				
+			}
+			if(status == Status.BLOCKING || status == Status.CROUCHING){
+				if(flow > 995)
+					flow = 1000;
+				else
+					flow += 5;
+			}
 		}
 		//update sprite:
 		if(drawIndex == drawInterval-1){
@@ -155,7 +172,6 @@ public class Player{
 		else{
 			drawIndex++;
 		}
-		
 		updateHitboxes();
     }
     

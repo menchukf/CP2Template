@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 
 import com.example.Player.Status;
-public class PlayerSprite {
+public class PlayerSprite{
     private boolean forward = true;//used for travesal
     int ID;//testing purpose only, to be deleted
     private ArrayList<ArrayList <BufferedImage>> imageSets = new ArrayList<>(5);

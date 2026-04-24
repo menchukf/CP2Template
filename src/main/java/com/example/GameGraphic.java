@@ -48,6 +48,29 @@ public class GameGraphic extends JPanel implements Runnable{
     public void paintComponent(Graphics g){
         super.paintComponent(g);
         Graphics2D g2 = (Graphics2D)g;
+        
+        // Player 1 bars (left side)
+        int p1Hp = game.player1().hp;
+        int p1Flow = game.player1().flow;
+        int hpBarWidth = (int)(p1Hp/100.0*200);
+        int flowBarWidth = (int)(p1Flow/1000.0*250);
+        
+        g2.setColor(Color.BLUE);
+        g2.fillRect(0, 0, flowBarWidth, 20);
+        g2.setColor(Color.RED);
+        g2.fillRect(0, 20, hpBarWidth, 20);
+        
+        // Player 2 bars (right side)
+        int p2Hp = game.player2().hp;
+        int p2Flow = game.player2().flow;
+        int p2HpBarWidth = (int)(p2Hp/100.0*200);
+        int p2FlowBarWidth = (int) (p2Flow/1000.0*250);
+        
+        g2.setColor(Color.BLUE);
+        g2.fillRect(600, 0, p2FlowBarWidth, 20);
+        g2.setColor(Color.RED);
+        g2.fillRect(600, 20, p2HpBarWidth, 20);
+        
         game.player1().paintComponent(g);
         game.player2().paintComponent(g);
     }
